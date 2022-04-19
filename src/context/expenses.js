@@ -24,7 +24,14 @@ const reducer = (state, action) => {
 };
 
 const initialValues = {
-  expenses: [],
+  expenses: [
+    {
+      id: 1,
+      amount: 99.99,
+      description: "Jordan 1",
+      date: new Date("2022-04-19"),
+    },
+  ],
 };
 
 const ExpensesContextProvider = ({ children }) => {

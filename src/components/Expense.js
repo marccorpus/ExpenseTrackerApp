@@ -2,7 +2,7 @@ import { StyleSheet, View, Text } from "react-native";
 
 import colors from "../constants/colors";
 
-const Expense = ({ id, amount, description, date }) => {
+const Expense = ({ amount, description, date }) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftContent}>
