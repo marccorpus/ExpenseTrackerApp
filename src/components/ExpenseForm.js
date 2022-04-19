@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import { ExpensesContext } from "../context/expenses";
@@ -10,23 +10,16 @@ import colors from "../constants/colors";
 
 const ExpenseForm = ({ expenseData, onCloseModal }) => {
   const [expense, setExpense] = useState({
-    amount: "",
-    date: "",
-    description: "",
+    amount: expenseData?.amount.toString() || "",
+    date: expenseData?.date.toISOString().slice(0, 10) || "",
+    description: expenseData?.description || "",
   });
+
   const [errors, setErrors] = useState({
     amount: false,
     date: false,
     description: false,
   });
-
-  useEffect(() => {
-    setExpense({
-      amount: expenseData?.amount || "",
-      date: expenseData?.date || "",
-      description: expenseData?.description || "",
-    });
-  }, [expenseData]);
 
   const expensesContext = useContext(ExpensesContext);
 

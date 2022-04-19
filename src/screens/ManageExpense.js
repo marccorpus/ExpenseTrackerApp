@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -10,7 +10,6 @@ import ExpenseForm from "../components/ExpenseForm";
 import colors from "../constants/colors";
 
 const ManageExpense = () => {
-  const [expenseData, setExpenseData] = useState();
   const expensesContext = useContext(ExpensesContext);
 
   const navigation = useNavigation();
@@ -18,35 +17,19 @@ const ManageExpense = () => {
 
   const routeId = route.params?.id;
 
-  const setTitle = () => {
-    navigation.setOptions({
-      title: routeId ? "Edit Expense" : "Add Expense",
-    });
-  };
-
-  const getExpense = () => {
-    if (routeId) {
-      const data = expensesContext.expenses.find(
-        (expense) => expense.id === routeId
-      );
-
-      setExpenseData({
-        ...data,
-        amount: data.amount.toString(),
-        date: new Date(data.date).toISOString().slice(0, 10),
-      });
-    }
-  };
+  const expenseData = expensesContext.expenses.find(
+    (expense) => expense.id === routeId
+  );
 
   const closeModalHandler = () => {
     navigation.goBack();
   };
 
   useEffect(() => {
-    setTitle();
-
-    getExpense();
-  }, []);
+    navigation.setOptions({
+      title: routeId ? "Edit Expense" : "Add Expense",
+    });
+  }, [navigation, routeId]);
 
   return (
     <View style={styles.container}>
