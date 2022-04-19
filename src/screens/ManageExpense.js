@@ -61,7 +61,7 @@ const ManageExpense = () => {
 
       <Text style={styles.title}>Your Expense</Text>
 
-      <ExpenseForm expenseData={expenseData} />
+      <ExpenseForm expenseData={expenseData} onCloseModal={closeModalHandler} />
     </View>
   );
 };

@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
 import { ExpensesContext } from "../context/expenses";
 
@@ -9,7 +8,7 @@ import Button from "./Button";
 
 import colors from "../constants/colors";
 
-const ExpenseForm = ({ expenseData }) => {
+const ExpenseForm = ({ expenseData, onCloseModal }) => {
   const [expense, setExpense] = useState({
     amount: "",
     date: "",
@@ -30,7 +29,6 @@ const ExpenseForm = ({ expenseData }) => {
   }, [expenseData]);
 
   const expensesContext = useContext(ExpensesContext);
-  const navigation = useNavigation();
 
   const textInputChangeHandler = (value, key) => {
     setExpense((prevExpense) => ({ ...prevExpense, [key]: value }));
@@ -75,7 +73,7 @@ const ExpenseForm = ({ expenseData }) => {
   };
 
   const closeModalHandler = () => {
-    navigation.goBack();
+    onCloseModal();
   };
 
   const hasErrors = errors.amount || errors.date || errors.description;
