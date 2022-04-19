@@ -7,13 +7,18 @@ const FormControl = ({
   label,
   textInputConfig,
   textInputStyle,
+  isError,
 }) => {
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, isError && styles.labelError]}>{label}</Text>
       <TextInput
         {...textInputConfig}
-        style={[styles.textInput, textInputStyle]}
+        style={[
+          styles.textInput,
+          textInputStyle,
+          isError && styles.textInputError,
+        ]}
       />
     </View>
   );
@@ -28,6 +33,9 @@ const styles = StyleSheet.create({
   label: {
     color: colors.white,
   },
+  labelError: {
+    color: colors.error500,
+  },
   textInput: {
     backgroundColor: colors.primary50,
     padding: 12,
@@ -35,5 +43,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 16,
     color: colors.primary800,
+  },
+  textInputError: {
+    backgroundColor: colors.error50,
   },
 });

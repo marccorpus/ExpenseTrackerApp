@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { ExpensesContext } from "../context/expenses";
@@ -15,6 +15,11 @@ const ExpenseForm = ({ expenseData }) => {
     date: "",
     description: "",
   });
+  const [errors, setErrors] = useState({
+    amount: false,
+    date: false,
+    description: false,
+  });
 
   useEffect(() => {
     setExpense({
@@ -29,6 +34,7 @@ const ExpenseForm = ({ expenseData }) => {
 
   const textInputChangeHandler = (value, key) => {
     setExpense((prevExpense) => ({ ...prevExpense, [key]: value }));
+    setErrors((prevErrors) => ({ ...prevErrors, [key]: false }));
   };
 
   const submitHandler = () => {
@@ -38,6 +44,20 @@ const ExpenseForm = ({ expenseData }) => {
       date: new Date(expense.date),
       description: expense.description,
     };
+
+    const isAmountValid = !isNaN(data.amount) && data.amount > 0;
+    const isDateValid = data.date.toString() !== "Invalid Date";
+    const isDescriptionValid = data.description.trim().length > 0;
+
+    if (!isAmountValid || !isDateValid || !isDescriptionValid) {
+      setErrors({
+        amount: !isAmountValid,
+        date: !isDateValid,
+        description: !isDescriptionValid,
+      });
+
+      return;
+    }
 
     if (expenseData) {
       expensesContext.updateExpense(expenseData.id, data);
@@ -58,12 +78,15 @@ const ExpenseForm = ({ expenseData }) => {
     navigation.goBack();
   };
 
+  const hasErrors = errors.amount || errors.date || errors.description;
+
   return (
     <>
       <View style={styles.row}>
         <FormControl
           containerStyle={{ flex: 1 }}
           label="Amount"
+          isError={errors.amount}
           textInputConfig={{
             keyboardType: "decimal-pad",
             value: expense.amount,
@@ -74,6 +97,7 @@ const ExpenseForm = ({ expenseData }) => {
         <FormControl
           containerStyle={{ flex: 1 }}
           label="Date"
+          isError={errors.date}
           textInputConfig={{
             placeholder: "YYYY-MM-DD",
             value: expense.date,
@@ -83,6 +107,7 @@ const ExpenseForm = ({ expenseData }) => {
       </View>
       <FormControl
         label="Description"
+        isError={errors.description}
         textInputConfig={{
           multiline: true,
           value: expense.description,
@@ -90,6 +115,12 @@ const ExpenseForm = ({ expenseData }) => {
         }}
         textInputStyle={{ textAlignVertical: "top", minHeight: 100 }}
       />
+
+      {hasErrors && (
+        <Text style={styles.errorText}>
+          Invalid data. Please check your input values.
+        </Text>
+      )}
 
       <View style={styles.buttonContainer}>
         {expenseData && (
@@ -133,5 +164,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+  },
+  errorText: {
+    textAlign: "center",
+    color: colors.error50,
+    fontSize: 16,
+    marginTop: 24,
   },
 });
