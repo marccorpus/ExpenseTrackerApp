@@ -4,20 +4,30 @@ export const ExpensesContext = createContext();
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "ADD":
-      return [{ ...action.payload.expense }, ...state.expenses];
-    case "UPDATE":
+    case "ADD": {
+      const expenses = [{ ...action.payload.expense }, ...state.expenses];
+
+      return { expenses };
+    }
+
+    case "UPDATE": {
       const expenses = [...state.expenses];
       const index = expenses.findIndex(
         (expense) => expense.id === action.payload.id
       );
-      expenses[index] = { ...state.payload.expense };
+      expenses[index] = { ...action.payload.expense };
 
-      return expenses;
-    case "DELETE":
-      return state.expenses.filter(
+      return { expenses };
+    }
+
+    case "DELETE": {
+      const expenses = state.expenses.filter(
         (expense) => expense.id !== action.payload.id
       );
+
+      return { expenses };
+    }
+
     default:
       return { ...state };
   }
@@ -28,8 +38,8 @@ const initialValues = {
     {
       id: 1,
       amount: 99.99,
-      description: "Jordan 1",
       date: new Date("2022-04-19"),
+      description: "Jordan 1",
     },
   ],
 };
